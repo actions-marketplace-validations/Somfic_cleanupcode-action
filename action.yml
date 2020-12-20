@@ -1,13 +1,9 @@
-name: 'Wait'
-description: 'Wait a designated number of milliseconds'
+name: 'Cleanup code'
+description: "Resharper's cleanupcode in a Github Action"
 inputs:
-  milliseconds:  # id of input
-    description: 'number of milliseconds to wait'
+  solution:
+    description: 'Solution file'
     required: true
-    default: '1000'
-outputs:
-  time: # output will be available to future steps
-    description: 'The message to output'
 runs:
   using: 'node12'
   main: 'dist/index.js'

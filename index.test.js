@@ -1,23 +1,30 @@
-const wait = require('./wait');
-const process = require('process');
-const cp = require('child_process');
-const path = require('path');
+const process = require("process");
+const cp = require("child_process");
+const download = require("./src/download");
+const decompress = require("./src/decompress");
+const prepare = require("./src/prepare");
+const command = require("./src/command");
+const fs = require("fs");
+const path = require("path");
+const config = require("./config/config");
 
-test('throws invalid number', async () => {
-  await expect(wait('foo')).rejects.toThrow('milliseconds not a number');
-});
+test("prepare", async () => {
+    await prepare(config.temp);
+    await expect(fs.existsSync(config.temp));
+}, 5000);
 
-test('wait 500 ms', async () => {
-  const start = new Date();
-  await wait(500);
-  const end = new Date();
-  var delta = Math.abs(end - start);
-  expect(delta).toBeGreaterThanOrEqual(500);
-});
+test("download file", async () => {
+    await download(config.resharperDownload, config.tempFile);
+    await expect(fs.existsSync(config.tempFile));
+}, 600000);
 
-// shows how the runner will run a javascript action with env / stdout protocol
-test('test runs', () => {
-  process.env['INPUT_MILLISECONDS'] = 500;
-  const ip = path.join(__dirname, 'index.js');
-  console.log(cp.execSync(`node ${ip}`, {env: process.env}).toString());
-})
+test("decompress file", async () => {
+    await decompress(config.tempFile, config.tempDirectory);
+    await expect(fs.existsSync(`${config.tempDirectory}\\cleanupcode.exe`));
+    await expect(fs.existsSync(`${config.tempDirectory}\\dupfinder.exe`));
+    await expect(fs.existsSync(`${config.tempDirectory}\\inspectcode.exe`));
+}, 600000);
+
+test("resharper", async () => {
+    await command(`cd ${config.tempDirectory} && inspectcode --version`);
+}, 10000);
