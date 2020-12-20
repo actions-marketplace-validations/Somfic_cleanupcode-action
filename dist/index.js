@@ -11571,7 +11571,7 @@ terminal.on("exit", function (code) {
 module.exports = (command) =>
     new Promise((resolve, reject) => {
         try {
-            var child = __webpack_require__(3129).exec(command);
+            var child = __webpack_require__(3129);
             child.stdout.on("data", (data) => {
                 core.debug(data);
             });
@@ -11579,6 +11579,7 @@ module.exports = (command) =>
                 core.debug("Resharper process exited");
                 resolve();
             });
+            child.execSync(command);
         } catch (err) {
             reject(err);
         }
