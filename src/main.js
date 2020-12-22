@@ -8,13 +8,10 @@ const core = require("@actions/core");
 module.exports = () =>
     new Promise(async (resolve, reject) => {
         try {
-            //let solution = core.getInput("solution");
-            let solution =
-                "C:\\Users\\somfi\\Documents\\GitHub\\EliteAPI\\EliteAPI.sln";
-
-            //await prepare(config.temp);
-            //await download(config.resharperDownload, config.tempFile);
-            //await decompress(config.tempFile, config.tempDirectory);
+            let solution = core.getInput("solution");
+            await prepare(config.temp);
+            await download(config.resharperDownload, config.tempFile);
+            await decompress(config.tempFile, config.tempDirectory);
             await command(`cleanupcode.sh ${solution}`);
             resolve();
         } catch (err) {
