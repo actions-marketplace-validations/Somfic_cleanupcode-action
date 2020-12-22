@@ -11571,15 +11571,19 @@ terminal.on("exit", function (code) {
 module.exports = (command) =>
     new Promise((resolve, reject) => {
         try {
-            var child = __webpack_require__(3129);
-            child.stdout.on("data", (data) => {
-                core.debug(data);
+            var spawn = __webpack_require__(3129).spawn;
+
+            core.debug(`> ${command}`);
+
+            var child = spawn(command, {
+                stdio: "inherit",
+                shell: true,
+                cwd: config.tempDirectory,
             });
-            child.on("exit", () => {
-                core.debug("Resharper process exited");
+
+            child.on("close", function (code) {
                 resolve();
             });
-            child.execSync(command);
         } catch (err) {
             reject(err);
         }
@@ -11676,14 +11680,14 @@ const core = __webpack_require__(3722);
 module.exports = () =>
     new Promise(async (resolve, reject) => {
         try {
-            let solution = core.getInput("solution");
+            //let solution = core.getInput("solution");
+            let solution =
+                "C:\\Users\\somfi\\Documents\\GitHub\\EliteAPI\\EliteAPI.sln";
 
-            await prepare(config.temp);
-            await download(config.resharperDownload, config.tempFile);
-            await decompress(config.tempFile, config.tempDirectory);
-            await command(
-                `cd ${config.tempDirectory} && cleanupcode ${solution}`
-            );
+            //await prepare(config.temp);
+            //await download(config.resharperDownload, config.tempFile);
+            //await decompress(config.tempFile, config.tempDirectory);
+            await command(`cleanupcode.sh ${solution}`);
             resolve();
         } catch (err) {
             reject(err);

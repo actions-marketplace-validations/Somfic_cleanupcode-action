@@ -13,15 +13,19 @@ terminal.on("exit", function (code) {
 module.exports = (command) =>
     new Promise((resolve, reject) => {
         try {
-            var child = require("child_process");
-            child.stdout.on("data", (data) => {
-                core.debug(data);
+            var spawn = require("child_process").spawn;
+
+            core.debug(`> ${command}`);
+
+            var child = spawn(command, {
+                stdio: "inherit",
+                shell: true,
+                cwd: config.tempDirectory,
             });
-            child.on("exit", () => {
-                core.debug("Resharper process exited");
+
+            child.on("close", function (code) {
                 resolve();
             });
-            child.execSync(command);
         } catch (err) {
             reject(err);
         }
