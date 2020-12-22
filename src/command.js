@@ -1,5 +1,4 @@
 const terminal = require("child_process").spawn("bash");
-const config = require("../config/config");
 const core = require("@actions/core");
 
 terminal.stdout.on("data", function (data) {
@@ -15,16 +14,19 @@ module.exports = (command) =>
         try {
             var spawn = require("child_process").spawn;
 
-            core.debug(`> ${command}`);
+            core.info(`> ${command}`);
 
             var child = spawn(command, {
                 stdio: "inherit",
                 shell: true,
-                cwd: config.tempDirectory,
             });
 
             child.on("close", function (code) {
                 resolve();
+            });
+
+            child.on("error", function (err) {
+                reject(err);
             });
         } catch (err) {
             reject(err);
