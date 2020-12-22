@@ -1,4 +1,5 @@
 const command = require("./command");
+const core = require("@actions/core");
 
 module.exports = () =>
     new Promise(async (resolve, reject) => {

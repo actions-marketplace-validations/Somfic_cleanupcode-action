@@ -460,6 +460,7 @@ module.exports = (command) =>
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 const command = __webpack_require__(156);
+const core = __webpack_require__(722);
 
 module.exports = () =>
     new Promise(async (resolve, reject) => {
